@@ -1,0 +1,43 @@
+<!--
+ - Created by vladyslavkravcuk on 15.12.2021.
+ -->
+
+<!-- List View Wrapper -->
+<template>
+    <h2 class="slds-text-color_error">{sObjectType}</h2>
+    <lightning-input
+            name="enter-search"
+            label="sObject type"
+            type="search"
+            onchange={changeObjectType}
+    ></lightning-input>
+
+    <br/>
+    <br/>
+    <br/>
+
+    <div>
+        <div class="slds-card slds-has-bottom-magnet">
+            <div class="slds-p-around_xx-small"
+                 onkeyup={handleSearch}>
+                <lightning-input
+                        name="enter-search"
+                        label="Search in List View"
+                        type="search"
+                        onfocus={handleInputFocus}
+                ></lightning-input>
+            </div>
+        </div>
+
+        <div class="slds-card slds-has-top-magnet">
+            <div class="slds-p-around_none">
+                <c-list-view list-view-params={listViewParams}
+                             s-object-type={sObjectType}
+                             selected-list-view={selectedListView}
+                             selected-list-view-id={selectedListViewId}
+                             search-query={searchQuery}>
+                </c-list-view>
+            </div>
+        </div>
+    </div>
+</template>

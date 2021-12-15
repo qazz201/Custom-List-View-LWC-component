@@ -1,0 +1,8 @@
+/**
+ * Created by vladyslavkravcuk on 15.12.2021.
+ */
+
+.list-view-results-container {
+    overflow-y: auto;
+    max-height: 19.3rem;
+}
