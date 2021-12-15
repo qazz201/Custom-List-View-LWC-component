@@ -5,8 +5,10 @@ export default class ListViewWrapper extends LightningElement {
     searchQuery = '';
     listViewParams = [];
     sObjectType = 'Contact';
-    selectedListView = {};
-    selectedListViewId = '';
+    // showListView = false;
+
+    // selectedListView = {};
+    // selectedListViewId = '';
 
     @wire(getListViewsBySobjectType, {sObjectType: '$sObjectType'})
     loadListViewParams({error, data}) {
@@ -19,11 +21,12 @@ export default class ListViewWrapper extends LightningElement {
         }
     }
 
+
     handleInputFocus() {
         const listView = this.template.querySelector('c-list-view');
         if (!listView) return;
 
-        listView.showListView = true;
+        this.handleListViewVisibility(true);
 
         if (!listView.selectedListViewId) {
             listView.setDefaultListView(this.listViewParams[0]);
@@ -35,6 +38,29 @@ export default class ListViewWrapper extends LightningElement {
         if (isEnterKey) {
             this.searchQuery = event.target.value;
         }
+    }
+
+    handleMainContainerMouseLeave() {
+        this.searchQuery = '';
+        const searchInput = this.template.querySelector('.listView-search-input');
+
+        if (!searchInput) return;
+
+        this.handleListViewVisibility(false);
+        searchInput.blur();
+    }
+
+    handleListViewVisibility(showListView = false) {
+        const listViewContainer = this.template.querySelector('.list-view-container');
+
+        if (!listViewContainer) return;
+
+        if (showListView) {
+            listViewContainer.classList.remove('slds-hidden');
+            return;
+        }
+
+        listViewContainer.classList.add('slds-hidden');
     }
 
     changeObjectType(event) {

@@ -4,36 +4,42 @@
 
 <!-- Lwc List View -->
 <template>
-    <!-- Header ----------------------------------------------------------------------------------------------->
-    <template if:true={showListView}>
-        <div class="slds-p-around_x-small">
-            <lightning-button-menu alternative-text="List Views"
-                                   variant="border-filled" o
-                                   onselect={handleListViewChange}>
+        <div>
+            <!-- Header ----------------------------------------------------------------------------------------------->
+            <div class="slds-p-around_x-small">
+                <lightning-button-menu alternative-text="List Views"
+                                       variant="border-filled"
+                                       onselect={handleListViewChange}>
 
-                <template for:each={listViewParams} for:item="listView">
-                    <lightning-menu-item key={listView.Id}
-                                         value={listView.DeveloperName}
-                                         label={listView.Name}>
-                    </lightning-menu-item>
-                </template>
-            </lightning-button-menu>
-            <span class="slds-p-around_small">{selectedListView.Name}</span>
-        </div>
-
-        <!-- List Views ----------------------------------------------------------------------------------------------->
-        <template if:false={isListViewRecordsExist}>No records Found</template>
-
-        <template if:true={isListViewRecordsExist}>
-            <div class="list-view-results-container">
-                <ul class="slds-has-dividers_top slds-has-block-links_space">
-                    <template for:each={listViewRecords} for:item="listViewRecord">
-                        <li key={listViewRecord.Id} class="slds-item">
-                            <a href="#">{listViewRecord.Name}</a>
-                        </li>
+                    <template for:each={listViewParams} for:item="listView">
+                        <lightning-menu-item key={listView.Id}
+                                             value={listView.DeveloperName}
+                                             label={listView.Name}>
+                        </lightning-menu-item>
                     </template>
-                </ul>
+                </lightning-button-menu>
+                <span class="slds-p-around_small">{selectedListView.Name}</span>
             </div>
-        </template>
-    </template>
+
+            <!-- List Views ------------------------------------------------------------------------------------------->
+            <div class="list-view-container">
+                <template if:true={showSpinner}>
+                    <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                </template>
+
+                <template if:false={isListViewRecordsExist}>No records Found</template>
+
+                <template if:true={isListViewRecordsExist}>
+                    <div class="list-view-container__results">
+                        <ul class="slds-has-dividers_top slds-has-block-links_space">
+                            <template for:each={listViewRecords} for:item="listViewRecord">
+                                <li key={listViewRecord.Id} class="slds-item">
+                                    <a href="#">{listViewRecord.Name}</a>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </template>
+            </div>
+        </div>
 </template>

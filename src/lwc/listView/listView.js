@@ -12,8 +12,9 @@ export default class ListView extends LightningElement {
     @api sObjectType = '';
     @api selectedListView = {};
     @api selectedListViewId = '';
-    @api showListView = false;
+ //   @api showListView = false;
 
+    showSpinner = true;
     listViewRecords = [];
     searchString = '';
     debounce;
@@ -22,7 +23,6 @@ export default class ListView extends LightningElement {
         clearTimeout(this.debounce);
         this.debounce = setTimeout(() => {
             this.searchString = value;
-            console.log(this.searchString,"AAAA SEARCHHH")
         }, SEARCH_DELAY);
     };
 
@@ -44,19 +44,21 @@ export default class ListView extends LightningElement {
         if (error) {
             console.error(error);
         }
+
+        this.showSpinner = false;
     }
 
     get searchQuery() {
         return this.searchString;
     }
 
-    get isListViewRecordsExist(){
-        console.log(!!this.listViewRecords.length)
+    get isListViewRecordsExist() {
         return !!this.listViewRecords.length;
     }
 
     handleListViewChange(event) {
         const selectedListViewApiName = event.detail.value;
+        this.showSpinner = true;
         const listView = this.listViewParams.find(listView => listView.DeveloperName === selectedListViewApiName);
 
         this.setDefaultListView(listView);

@@ -16,27 +16,30 @@
     <br/>
     <br/>
 
-    <div>
+    <div onmouseleave={handleMainContainerMouseLeave}
+         onkeyup={handleSearch}>
         <div class="slds-card slds-has-bottom-magnet">
-            <div class="slds-p-around_xx-small"
-                 onkeyup={handleSearch}>
+            <div class="slds-p-around_xx-small">
                 <lightning-input
+                        class="listView-search-input"
                         name="enter-search"
                         label="Search in List View"
                         type="search"
+                        value={searchQuery}
                         onfocus={handleInputFocus}
                 ></lightning-input>
             </div>
         </div>
 
-        <div class="slds-card slds-has-top-magnet">
-            <div class="slds-p-around_none">
-                <c-list-view list-view-params={listViewParams}
-                             s-object-type={sObjectType}
-                             selected-list-view={selectedListView}
-                             selected-list-view-id={selectedListViewId}
-                             search-query={searchQuery}>
-                </c-list-view>
+
+        <div class="list-view-container slds-hidden">
+            <div class="slds-card slds-has-top-magnet">
+                <div class="slds-p-around_none">
+                    <c-list-view list-view-params={listViewParams}
+                                 s-object-type={sObjectType}
+                                 search-query={searchQuery}>
+                    </c-list-view>
+                </div>
             </div>
         </div>
     </div>
