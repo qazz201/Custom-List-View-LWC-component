@@ -21,7 +21,6 @@ export default class ListViewWrapper extends LightningElement {
         }
     }
 
-
     handleInputFocus() {
         const listView = this.template.querySelector('c-list-view');
         if (!listView) return;
@@ -65,5 +64,12 @@ export default class ListViewWrapper extends LightningElement {
 
     changeObjectType(event) {
         this.sObjectType = event.target.value;
+    }
+
+    handleListViewChange(event) {
+        const searchInput = this.template.querySelector('.listView-search-input');
+        if (!searchInput) return;
+
+        setTimeout(() => searchInput.focus(), 0); // the focus is lost we need to focus input again
     }
 }

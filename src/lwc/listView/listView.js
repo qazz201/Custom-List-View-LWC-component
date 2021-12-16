@@ -12,7 +12,7 @@ export default class ListView extends LightningElement {
     @api sObjectType = '';
     @api selectedListView = {};
     @api selectedListViewId = '';
- //   @api showListView = false;
+    //   @api showListView = false;
 
     showSpinner = true;
     listViewRecords = [];
@@ -62,5 +62,6 @@ export default class ListView extends LightningElement {
         const listView = this.listViewParams.find(listView => listView.DeveloperName === selectedListViewApiName);
 
         this.setDefaultListView(listView);
+        this.dispatchEvent(new CustomEvent('listviewchange', {detail: {...listView}}));
     }
 }

@@ -31,13 +31,13 @@
             </div>
         </div>
 
-
         <div class="list-view-container slds-hidden">
             <div class="slds-card slds-has-top-magnet">
                 <div class="slds-p-around_none">
                     <c-list-view list-view-params={listViewParams}
                                  s-object-type={sObjectType}
-                                 search-query={searchQuery}>
+                                 search-query={searchQuery}
+                                 onlistviewchange={handleListViewChange}>
                     </c-list-view>
                 </div>
             </div>
