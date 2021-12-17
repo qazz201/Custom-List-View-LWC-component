@@ -26,7 +26,7 @@ export default class ListView extends LightningElement {
         }, SEARCH_DELAY);
     };
 
-    @api setDefaultListView(listView) {
+    @api setSelectedListView(listView) {
         this.selectedListView = listView;
         this.selectedListViewId = this.selectedListView?.Id;
     }
@@ -57,11 +57,10 @@ export default class ListView extends LightningElement {
     }
 
     handleListViewChange(event) {
-        const selectedListViewApiName = event.detail.value;
         this.showSpinner = true;
-        const listView = this.listViewParams.find(listView => listView.DeveloperName === selectedListViewApiName);
+        const listView = event.detail;
 
-        this.setDefaultListView(listView);
+        this.setSelectedListView(listView);
         this.dispatchEvent(new CustomEvent('listviewchange', {detail: {...listView}}));
     }
 }

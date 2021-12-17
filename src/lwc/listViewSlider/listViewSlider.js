@@ -98,7 +98,6 @@ export default class ListViewSlider extends LightningElement {
                 break;
             }
         }
-
     }
 
     handleSelectPrevious() {

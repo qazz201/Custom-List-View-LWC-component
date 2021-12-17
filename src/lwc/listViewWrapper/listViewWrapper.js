@@ -13,6 +13,11 @@ export default class ListViewWrapper extends LightningElement {
     // selectedListView = {};
     // selectedListViewId = '';
 
+    renderedCallback() {
+        this.template.querySelector('.main-container')
+            .addEventListener('mouseleave', this.handleMouseLeaveMainContainer);
+    }
+
     @wire(getListViewsBySobjectType, {sObjectType: '$sObjectType'})
     loadListViewParams({error, data}) {
         if (data) {
@@ -39,6 +44,7 @@ export default class ListViewWrapper extends LightningElement {
     //     this.mouseOverMainContainer = true;
     //     console.log('_____MOUSE OVER_____')
     // }
+
     //
     // handleMouseOut() {
     //     console.log('_____MOUSE Out_____')
@@ -59,16 +65,15 @@ export default class ListViewWrapper extends LightningElement {
         this.handleListViewVisibility(true);
 
         if (!listView.selectedListViewId) {
-            listView.setDefaultListView(this.listViewParams[0]);
+            listView.setSelectedListView(this.listViewParams[0]);
         }
     }
 
-    handleMouseLeaveMainContainer() {
+    handleMouseLeaveMainContainer = () => {
         this.searchQuery = '';
         this.handleListViewVisibility(false);
 
         const searchInput = this.template.querySelector('.listView-search-input');
-
         if (!searchInput) return;
         searchInput.blur();
     }
@@ -86,8 +91,19 @@ export default class ListViewWrapper extends LightningElement {
         listViewContainer.classList.add(CSS_LIST_VIEW_HIDDEN);
     }
 
+    handleMouseMove() {
+        console.log("ENTERRRRRR")
+        this.template.querySelector('.main-container')
+            .addEventListener('mouseleave', this.handleMouseLeaveMainContainer);
+    }
+
     handleListViewChange(event) {
-        setTimeout(() => this.handleListViewVisibility(true), 0);
-        // this.template.querySelector('.main-container').focus();
+        this.template.querySelector('.main-container')
+            .removeEventListener('mouseleave', this.handleMouseLeaveMainContainer);
+
+        console.log('Asdsdsd')
+        setTimeout(() => {
+            this.handleInputFocus();
+        }, 200);
     }
 }
