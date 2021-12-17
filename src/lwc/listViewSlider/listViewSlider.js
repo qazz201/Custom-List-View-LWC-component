@@ -1,15 +1,19 @@
-import {LightningElement, api} from 'lwc';
+import {LightningElement, api, track} from 'lwc';
+import Map from "lightning/map";
 
 const SELECT_PREVIOUS = 'select-previous';
 const SELECT_NEXT = 'select-next';
-const SELECT_EVENT = 'selectchange';
+const EVENT_TIMEOUT = 200; // ms
+
+const EVENT_NAME = 'selectvalue';
 
 export default class ListViewSlider extends LightningElement {
-    @api options = [];
 
-    selected = {};
-    customSelect; //DOM select element
-    lastOptionIndex; // the index of the last option in select
+    selected = {}; // currently selected option
+    optionNameByValue = {}; // new Map() is not working? ({'String'=>{Object}})
+    customSelect; // DOM select element
+    lastOptionIndex; // Number: the index of the last option in select
+    eventDebounce;
 
     renderedCallback() {
         this.customSelect = this.template.querySelector('.custom-select');
@@ -18,33 +22,63 @@ export default class ListViewSlider extends LightningElement {
         this.lastOptionIndex = this.customSelect.options.length - 1;
     }
 
-    @api set selectedOption(value) {
-        // check if value is an Object
-        if (typeof value === 'object' && !Array.isArray(value) && value !== null) {
-            this.selected = value;
-            this.setDefaultSelectedValue(value);
+    /********* API ****************************************************************************************************/
+
+    @api set options(values) {
+        // check if value is an array
+        if (Array.isArray(values)) {
+            const entries = values.map(option => [option.DeveloperName, option]);
+            this.optionNameByValue = Object.fromEntries(entries);
         }
     };
+
+    @api set selectedOption(option) {
+        // check if value is an Object
+        if (typeof option === 'object' && !Array.isArray(option) && option !== null) {
+            this.selected = option;
+            this.setDefaultSelectedValue(option);
+        }
+    };
+
+    get options() {
+        return Object.values(this.optionNameByValue);
+    }
 
     get selectedOption() {
         return this.selected;
     }
+
+    /********* Functionality ******************************************************************************************/
 
     setDefaultSelectedValue(selectedOption = {}) {
         if (!this.customSelect) return;
         this.customSelect.value = selectedOption.DeveloperName;
     }
 
-    eventDispatcher(detail = {}) {
-        dispatchEvent(new CustomEvent(SELECT_EVENT, {detail}));
-    }
-
     handleChangeSelection(event) {
-        const value = event.currentTarget.value;
+        const selectedOption = this.getSelectedFromOptionsByName(event.currentTarget.value);
+        if (!selectedOption) return;
+
+        this.dispatchEventByOptionName(event.currentTarget.value);
     }
 
-    getSelectedFromOptionsByValue(value='') {
+    dispatchEventByOptionName(selectedOptionName = '') {
+        clearTimeout(this.eventDebounce);
 
+        if (!this.optionNameByValue.hasOwnProperty(selectedOptionName)) return;
+
+        const selectedOption = this.optionNameByValue[selectedOptionName];
+        this.selected = selectedOption;
+
+        this.eventDebounce = setTimeout(() => {
+            this.dispatchEvent(new CustomEvent(EVENT_NAME, {detail: {...selectedOption}}));
+        }, EVENT_TIMEOUT);
+    }
+
+    getSelectedFromOptionsByName(optionName = '') {
+        if (!this.optionNameByValue.hasOwnProperty(optionName)) return;
+
+        return this.optionNameByValue[optionName];
     }
 
     /********* Buttons Action Handlers ********************************************************************************/
@@ -73,11 +107,11 @@ export default class ListViewSlider extends LightningElement {
 
         if (prevIndex < 0) {
             this.customSelect.selectedIndex = this.lastOptionIndex;
-            return;
+        } else {
+            this.customSelect.selectedIndex = prevIndex;
         }
 
-        this.customSelect.selectedIndex = prevIndex;
-        return;
+        this.dispatchEventByOptionName(this.customSelect.value);
     }
 
     handleSelectNext() {
@@ -86,10 +120,10 @@ export default class ListViewSlider extends LightningElement {
 
         if (nextIndex > this.lastOptionIndex) {
             this.customSelect.selectedIndex = 0;
-            return;
+        } else {
+            this.customSelect.selectedIndex = nextIndex;
         }
 
-        this.customSelect.selectedIndex = nextIndex;
-        return;
+        this.dispatchEventByOptionName(this.customSelect.value);
     }
 }
