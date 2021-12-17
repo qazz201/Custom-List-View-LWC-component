@@ -16,8 +16,14 @@
     <br/>
     <br/>
 
-    <div onmouseleave={handleMainContainerMouseLeave}
-         onkeyup={handleSearch}>
+<!--    onmouseover={handleMouseOver}-->
+<!--    onmouseout={handleMouseOut}-->
+<!--    onblur={handleBlurMainContainer}-->
+<!--    -->
+    <div class="main-container"
+         onmouseleave={handleMouseLeaveMainContainer}
+         onkeyup={handleSearch}
+         tabindex="-1">
         <div class="slds-card slds-has-bottom-magnet">
             <div class="slds-p-around_xx-small">
                 <lightning-input
@@ -31,7 +37,7 @@
             </div>
         </div>
 
-        <div class="list-view-container slds-hidden">
+        <div class="list-view-container list-view-container__hidden">
             <div class="slds-card slds-has-top-magnet">
                 <div class="slds-p-around_none">
                     <c-list-view list-view-params={listViewParams}

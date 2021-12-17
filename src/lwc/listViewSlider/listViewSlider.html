@@ -1,0 +1,41 @@
+<!-- List View Slider -->
+
+<template>
+
+    <div class="slds-grid">
+        <!-- Left Button ---------------------------------------------------------------------------------------------->
+        <div class="slds-col slds-size_1-of-4 slds-text-align_right">
+            <button onclick={handleButtonChangeSelection}
+                    data-id="select-previous"
+                    class="slds-button slds-button_icon"
+                    title="Previous">
+                <svg class="icon-container slds-icon_small slds-icon slds-icon-text-default" aria-hidden="true">
+                    <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#left"></use>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Select --------------------------------------------------------------------------------------------------->
+        <div class="slds-col slds-size_2-of-4">
+            <select onchange={handleChangeSelection} class="custom-select ">
+                <template for:each={options} for:item="listView">
+                    <option key={listView.Id} value={listView.DeveloperName}>{listView.Name}</option>
+                </template>
+            </select>
+        </div>
+
+        <!-- Right Button --------------------------------------------------------------------------------------------->
+        <div class="slds-col slds-size_1-of-4 slds-text-align_left">
+            <button onclick={handleButtonChangeSelection}
+                    data-id="select-next"
+                    class="slds-button slds-button_icon"
+                    title="Next">
+                <svg class="icon-container slds-icon_small slds-icon slds-icon-text-default" aria-hidden="true">
+                    <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#right"></use>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <p>Selected value is: {value}</p>
+</template>
