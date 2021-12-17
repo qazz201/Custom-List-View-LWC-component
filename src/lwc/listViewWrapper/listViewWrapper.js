@@ -3,19 +3,23 @@ import getListViewsBySobjectType from '@salesforce/apex/ListViewController.getLi
 
 const CSS_LIST_VIEW_HIDDEN = 'list-view-container__hidden';
 
+const EVENT_MOUSELEAVE = 'mouseleave';
+
 export default class ListViewWrapper extends LightningElement {
     searchQuery = '';
     listViewParams = [];
     sObjectType = 'Contact';
-    mouseOverMainContainer = false;
-    // showListView = false;
 
-    // selectedListView = {};
-    // selectedListViewId = '';
+    // DOM
+    domMainContainer;
+
+    // DOM triggers
+    isEventMouseLeaveAdded = false;
 
     renderedCallback() {
-        this.template.querySelector('.main-container')
-            .addEventListener('mouseleave', this.handleMouseLeaveMainContainer);
+        this.isEventMouseLeaveAdded = true;
+        this.domMainContainer = this.template.querySelector('.main-container');
+        this.addEventListenerOnElement(this.domMainContainer, EVENT_MOUSELEAVE, this.handleMouseLeaveMainContainer);
     }
 
     @wire(getListViewsBySobjectType, {sObjectType: '$sObjectType'})
@@ -40,23 +44,20 @@ export default class ListViewWrapper extends LightningElement {
         }
     }
 
-    // handleMouseOver() {
-    //     this.mouseOverMainContainer = true;
-    //     console.log('_____MOUSE OVER_____')
-    // }
-
-    //
-    // handleMouseOut() {
-    //     console.log('_____MOUSE Out_____')
-    // }
-    //
-    // handleBlurMainContainer() {
-    //     console.log('_____BLURRRRR_____')
-    //     if (!this.mouseOverMainContainer) this.handleMouseLeaveMainContainer();
-    //
-    // }
-
     /********* List View Visibility Handlers **************************************************************************/
+
+    handleListViewVisibility(showListView = false) {
+        const listViewContainer = this.template.querySelector('.list-view-container');
+
+        if (!listViewContainer) return;
+
+        if (showListView) {
+            listViewContainer.classList.remove(CSS_LIST_VIEW_HIDDEN);
+            return;
+        }
+
+        listViewContainer.classList.add(CSS_LIST_VIEW_HIDDEN);
+    }
 
     handleInputFocus() {
         const listView = this.template.querySelector('c-list-view');
@@ -78,32 +79,24 @@ export default class ListViewWrapper extends LightningElement {
         searchInput.blur();
     }
 
-    handleListViewVisibility(showListView = false) {
-        const listViewContainer = this.template.querySelector('.list-view-container');
+    handleMouseMoveMainContainer() {
+        if (this.isEventMouseLeaveAdded) return;
 
-        if (!listViewContainer) return;
-
-        if (showListView) {
-            listViewContainer.classList.remove(CSS_LIST_VIEW_HIDDEN);
-            return;
-        }
-
-        listViewContainer.classList.add(CSS_LIST_VIEW_HIDDEN);
-    }
-
-    handleMouseMove() {
-        console.log("ENTERRRRRR")
-        this.template.querySelector('.main-container')
-            .addEventListener('mouseleave', this.handleMouseLeaveMainContainer);
+        this.isEventMouseLeaveAdded = true;
+        this.addEventListenerOnElement(this.domMainContainer, EVENT_MOUSELEAVE, this.handleMouseLeaveMainContainer);
     }
 
     handleListViewChange(event) {
-        this.template.querySelector('.main-container')
-            .removeEventListener('mouseleave', this.handleMouseLeaveMainContainer);
+        this.isEventMouseLeaveAdded = false;
+        this.removeEventListenerOnElement(this.domMainContainer, EVENT_MOUSELEAVE, this.handleMouseLeaveMainContainer);
+        this.handleListViewVisibility(true);
+    }
 
-        console.log('Asdsdsd')
-        setTimeout(() => {
-            this.handleInputFocus();
-        }, 200);
+    addEventListenerOnElement(element, eventName, eventHandler) {
+        element.addEventListener(eventName, eventHandler);
+    }
+
+    removeEventListenerOnElement(element, eventName, eventHandler) {
+        element.removeEventListener(eventName, eventHandler);
     }
 }
