@@ -2,7 +2,6 @@ import {LightningElement, wire, track} from 'lwc';
 import getListViewsBySobjectType from '@salesforce/apex/ListViewController.getListViewsBySobjectType';
 
 const CSS_LIST_VIEW_HIDDEN = 'list-view-container__hidden';
-
 const EVENT_MOUSELEAVE = 'mouseleave';
 
 export default class ListViewWrapper extends LightningElement {
@@ -17,9 +16,8 @@ export default class ListViewWrapper extends LightningElement {
     isEventMouseLeaveAdded = false;
 
     renderedCallback() {
-        this.isEventMouseLeaveAdded = true;
         this.domMainContainer = this.template.querySelector('.main-container');
-        this.addEventListenerOnElement(this.domMainContainer, EVENT_MOUSELEAVE, this.handleMouseLeaveMainContainer);
+        this.addEventMouseLeaveOnElement(this.domMainContainer, this.handleMouseLeaveMainContainer);
     }
 
     @wire(getListViewsBySobjectType, {sObjectType: '$sObjectType'})
@@ -46,19 +44,6 @@ export default class ListViewWrapper extends LightningElement {
 
     /********* List View Visibility Handlers **************************************************************************/
 
-    handleListViewVisibility(showListView = false) {
-        const listViewContainer = this.template.querySelector('.list-view-container');
-
-        if (!listViewContainer) return;
-
-        if (showListView) {
-            listViewContainer.classList.remove(CSS_LIST_VIEW_HIDDEN);
-            return;
-        }
-
-        listViewContainer.classList.add(CSS_LIST_VIEW_HIDDEN);
-    }
-
     handleInputFocus() {
         const listView = this.template.querySelector('c-list-view');
         if (!listView) return;
@@ -79,24 +64,37 @@ export default class ListViewWrapper extends LightningElement {
         searchInput.blur();
     }
 
-    handleMouseMoveMainContainer() {
+    handleListViewVisibility(showListView = false) {
+        const listViewContainer = this.template.querySelector('.list-view-container');
+
+        if (!listViewContainer) return;
+
+        if (showListView) {
+            listViewContainer.classList.remove(CSS_LIST_VIEW_HIDDEN);
+            return;
+        }
+
+        listViewContainer.classList.add(CSS_LIST_VIEW_HIDDEN);
+    }
+
+    handleMouseMove() {
         if (this.isEventMouseLeaveAdded) return;
 
-        this.isEventMouseLeaveAdded = true;
-        this.addEventListenerOnElement(this.domMainContainer, EVENT_MOUSELEAVE, this.handleMouseLeaveMainContainer);
+        this.addEventMouseLeaveOnElement(this.domMainContainer,this.handleMouseLeaveMainContainer);
     }
 
     handleListViewChange(event) {
-        this.isEventMouseLeaveAdded = false;
-        this.removeEventListenerOnElement(this.domMainContainer, EVENT_MOUSELEAVE, this.handleMouseLeaveMainContainer);
+        this.removeEventMouseLeaveOnElement(this.domMainContainer, this.handleMouseLeaveMainContainer)
         this.handleListViewVisibility(true);
     }
 
-    addEventListenerOnElement(element, eventName, eventHandler) {
-        element.addEventListener(eventName, eventHandler);
+    addEventMouseLeaveOnElement(element, eventHandler) {
+        this.isEventMouseLeaveAdded = true;
+        element.addEventListener(EVENT_MOUSELEAVE, eventHandler);
     }
 
-    removeEventListenerOnElement(element, eventName, eventHandler) {
-        element.removeEventListener(eventName, eventHandler);
+    removeEventMouseLeaveOnElement(element, eventHandler) {
+        this.isEventMouseLeaveAdded = false;
+        element.removeEventListener(EVENT_MOUSELEAVE, eventHandler);
     }
 }

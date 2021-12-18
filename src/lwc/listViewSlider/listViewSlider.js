@@ -1,5 +1,4 @@
 import {LightningElement, api, track} from 'lwc';
-import Map from "lightning/map";
 
 const SELECT_PREVIOUS = 'select-previous';
 const SELECT_NEXT = 'select-next';
@@ -14,6 +13,10 @@ export default class ListViewSlider extends LightningElement {
     customSelect; // DOM select element
     lastOptionIndex; // Number: the index of the last option in select
     eventDebounce;
+    datasets = {
+        SELECT_NEXT,
+        SELECT_PREVIOUS,
+    };
 
     renderedCallback() {
         this.customSelect = this.template.querySelector('.custom-select');
@@ -64,14 +67,15 @@ export default class ListViewSlider extends LightningElement {
 
     dispatchEventByOptionName(selectedOptionName = '') {
         clearTimeout(this.eventDebounce);
+        const selectedOption = this.getSelectedFromOptionsByName(selectedOptionName);
 
-        if (!this.optionNameByValue.hasOwnProperty(selectedOptionName)) return;
+        if (!selectedOption) return;
 
-        const selectedOption = this.optionNameByValue[selectedOptionName];
         this.selected = selectedOption;
 
         this.eventDebounce = setTimeout(() => {
-            this.dispatchEvent(new CustomEvent(EVENT_NAME, {detail: {...selectedOption}}));
+            this.dispatchEvent(
+                new CustomEvent(EVENT_NAME, {detail: {...selectedOption}}));
         }, EVENT_TIMEOUT);
     }
 
@@ -89,11 +93,11 @@ export default class ListViewSlider extends LightningElement {
         const actionType = event.currentTarget.dataset.id;
 
         switch (actionType) {
-            case SELECT_PREVIOUS: {
+            case this.datasets.SELECT_PREVIOUS: {
                 this.handleSelectPrevious();
                 break;
             }
-            case SELECT_NEXT: {
+            case this.datasets.SELECT_NEXT: {
                 this.handleSelectNext();
                 break;
             }
