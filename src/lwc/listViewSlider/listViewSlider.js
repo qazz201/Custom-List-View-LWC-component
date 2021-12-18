@@ -4,7 +4,7 @@ const SELECT_PREVIOUS = 'select-previous';
 const SELECT_NEXT = 'select-next';
 const EVENT_TIMEOUT = 200; // ms
 
-const EVENT_NAME = 'selectvalue';
+const EVENT_SELECT_VALUE = 'selectvalue';
 
 export default class ListViewSlider extends LightningElement {
 
@@ -75,7 +75,7 @@ export default class ListViewSlider extends LightningElement {
 
         this.eventDebounce = setTimeout(() => {
             this.dispatchEvent(
-                new CustomEvent(EVENT_NAME, {detail: {...selectedOption}}));
+                new CustomEvent(EVENT_SELECT_VALUE, {detail: {...selectedOption}}));
         }, EVENT_TIMEOUT);
     }
 

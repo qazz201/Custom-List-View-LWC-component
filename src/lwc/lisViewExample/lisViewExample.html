@@ -1,0 +1,17 @@
+<!-- Lis View Example -->
+<template>
+    <h2 class="slds-text-color_error">{sObjectType}</h2>
+    <lightning-input
+            name="enter-search"
+            label="sObject type"
+            type="search"
+            onchange={changeObjectType}>
+    </lightning-input>
+
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+
+    <c-list-view-component columns={columns} s-object-type={sObjectType}></c-list-view-component>
+</template>

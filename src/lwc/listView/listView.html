@@ -23,13 +23,13 @@
 
             <template if:true={isListViewRecordsExist}>
                 <div class="list-view-container__results">
-                    <ul class="slds-has-dividers_top slds-has-block-links_space">
-                        <template for:each={listViewRecords} for:item="listViewRecord">
-                            <li key={listViewRecord.Id} class="slds-item">
-                                <a href="#">{listViewRecord.Name}</a>
-                            </li>
-                        </template>
-                    </ul>
+                    <lightning-datatable key-field="Id"
+                                         data={listViewRecords}
+                                         columns={columns}
+                                         show-row-number-column
+                                         hide-checkbox-column
+                                         resize-column-disabled>
+                    </lightning-datatable>
                 </div>
             </template>
         </div>

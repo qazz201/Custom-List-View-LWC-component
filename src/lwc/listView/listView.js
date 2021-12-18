@@ -1,18 +1,18 @@
 import {LightningElement, api, wire} from 'lwc';
 import getListViewRecords from '@salesforce/apex/ListViewController.getListViewRecords';
 
-
 import {getListInfoByName} from 'lightning/uiListsApi';
 import CONTACT_OBJECT from '@salesforce/schema/Contact';
 
 const SEARCH_DELAY = 200; //ms
+const EVENT_LIST_VIEW_CHANGE = 'listviewchange';
 
 export default class ListView extends LightningElement {
     @api listViewParams = [];
     @api sObjectType = '';
     @api selectedListView = {};
     @api selectedListViewId = '';
-    //   @api showListView = false;
+    @api columns = [];
 
     showSpinner = true;
     listViewRecords = [];
@@ -61,6 +61,6 @@ export default class ListView extends LightningElement {
         const listView = event.detail;
 
         this.setSelectedListView(listView);
-        this.dispatchEvent(new CustomEvent('listviewchange', {detail: {...listView}}));
+        this.dispatchEvent(new CustomEvent(EVENT_LIST_VIEW_CHANGE, {detail: {...listView}}));
     }
 }
