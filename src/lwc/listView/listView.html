@@ -26,6 +26,8 @@
                     <lightning-datatable key-field="Id"
                                          data={listViewRecords}
                                          columns={columns}
+                                         onloadmore={loadMoreData}
+                                         enable-infinite-loading
                                          show-row-number-column
                                          hide-checkbox-column
                                          resize-column-disabled>

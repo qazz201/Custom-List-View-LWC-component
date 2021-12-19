@@ -1,5 +1,6 @@
 import {LightningElement, api, wire} from 'lwc';
 import getListViewRecords from '@salesforce/apex/ListViewController.getListViewRecords';
+//import loadMore from '@salesforce/apex/ListViewController.loadMoreListViewRecords';
 
 import {getListInfoByName} from 'lightning/uiListsApi';
 import CONTACT_OBJECT from '@salesforce/schema/Contact';
@@ -12,6 +13,7 @@ export default class ListView extends LightningElement {
     @api sObjectType = '';
     @api selectedListView = {};
     @api selectedListViewId = '';
+    @api searchFieldApiName = '';
     @api columns = [];
 
     showSpinner = true;
@@ -21,6 +23,8 @@ export default class ListView extends LightningElement {
 
     @api set searchQuery(value) {
         clearTimeout(this.debounce);
+        this.showSpinner = true;
+
         this.debounce = setTimeout(() => {
             this.searchString = value;
         }, SEARCH_DELAY);
@@ -34,12 +38,13 @@ export default class ListView extends LightningElement {
     @wire(getListViewRecords, {
         sObjectType: '$sObjectType',
         listViewId: '$selectedListViewId',
-        searchRequest: '$searchQuery',
+        searchFieldApiName: '$searchFieldApiName',
+        searchRequest: '$searchString',
     })
-    getListViewRecords({error, data}) {
+    getRecords({error, data}) {
         if (data) {
             this.listViewRecords = data;
-            console.log(data)
+            console.log(this.searchString, data)
         }
         if (error) {
             console.error(error);
@@ -62,5 +67,15 @@ export default class ListView extends LightningElement {
 
         this.setSelectedListView(listView);
         this.dispatchEvent(new CustomEvent(EVENT_LIST_VIEW_CHANGE, {detail: {...listView}}));
+    }
+
+    loadMoreData(event) {
+        console.log('LOAD MORE')
+        // loadMore({
+        //     sObjectType: this.sObjectType,
+        //     listViewId: this.selectedListViewId,
+        //     limitRecords: 10,
+        //     offsetRecords: 0
+        // }).then(result => console.log(result))
     }
 }

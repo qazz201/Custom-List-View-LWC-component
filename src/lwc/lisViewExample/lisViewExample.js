@@ -5,7 +5,7 @@
 import {LightningElement} from 'lwc';
 
 export default class LisViewExample extends LightningElement {
-
+    searchFieldApiName = 'Name';
     sObjectType = 'Contact';
     columns = [
         {label: 'Name', fieldName: 'Name', hideDefaultActions: true},

@@ -6,6 +6,7 @@ const EVENT_MOUSELEAVE = 'mouseleave';
 
 export default class ListViewComponent extends LightningElement {
     @api sObjectType = '';
+    @api searchFieldApiName = '';
     @api columns = [];
 
     searchQuery = '';
