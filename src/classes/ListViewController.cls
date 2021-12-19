@@ -4,6 +4,7 @@ public class ListViewController {
     private static final String WHERE_CONDITION = ' WHERE ';
     private static final String LIKE_CONDITION = ' LIKE ';
     private static final String AND_CONDITION = ' AND ';
+    private static final String USING_SCOPE_CONDITION = ' USING SCOPE ';
 
     @AuraEnabled(cacheable=true)
     public static String getSessionId() {
@@ -25,7 +26,6 @@ public class ListViewController {
             return executeQuery(query);
         }
 
-        System.debug('QUERY RETURNED__ ' + getQueryWithWhereCondition(query, searchFieldApiName, searchRequest));
         return executeQuery(getQueryWithWhereCondition(query, searchFieldApiName, searchRequest));
     }
 
@@ -87,7 +87,7 @@ public class ListViewController {
         if (String.isBlank(query) || String.isBlank(fieldApiName) || String.isBlank(fieldValue)) return query;
 
         String searchPattern = 'FROM \\w+ ?';
-        if (query.containsIgnoreCase('USING SCOPE ')) searchPattern = 'USING SCOPE \\w+ ?';
+        if (query.containsIgnoreCase(USING_SCOPE_CONDITION)) searchPattern = USING_SCOPE_CONDITION + '\\w+ ?';
 
         String changes = WHERE_CONDITION
                 + fieldApiName
@@ -95,13 +95,14 @@ public class ListViewController {
                 + '\'%' + String.escapeSingleQuotes(fieldValue) + '%\' ';
 
         List<String> regexMatches = regexPatternMatch(searchPattern, query);
+        System.debug(regexMatches);
         if (regexMatches.isEmpty()) return query;
 
         return query.replaceAll(regexMatches[0], regexMatches[0] + changes);
     }
 
     public static List<String> regexPatternMatch(String patternValue, String text) {
-        Pattern patternObj = Pattern.compile('(?i) ' + patternValue);
+        Pattern patternObj = Pattern.compile('(?i) ?' + patternValue);
         Matcher matcher = patternObj.matcher(text);
 
         List<String> matches = new List<String>();
