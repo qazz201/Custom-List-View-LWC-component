@@ -76,13 +76,14 @@ export default class ListViewComponent extends LightningElement {
         listViewContainer.classList.add(CSS_LIST_VIEW_HIDDEN);
     }
 
-    handleMouseMove() {
+    handleMouseMoveMainContainer() {
         if (this.isEventMouseLeaveAdded) return;
 
         this.addEventMouseLeaveOnElement(this.domMainContainer, this.handleMouseLeaveMainContainer);
     }
 
-    handleListViewChange(event) {
+    handleListViewChange() {
+        this.searchQuery = '';
         this.removeEventMouseLeaveOnElement(this.domMainContainer, this.handleMouseLeaveMainContainer)
         this.handleListViewVisibility(true);
     }

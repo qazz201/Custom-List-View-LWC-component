@@ -1,5 +1,5 @@
 
-public with sharing class ListViewController {
+public class ListViewController {
     private static final String REQUEST_URL = URL.getSalesforceBaseUrl().toExternalForm() + '/services/data/v53.0/sobjects/{0}/listviews/{1}/describe'; // {0} sObject type; {1} view list id
     private static final String WHERE_CONDITION = ' WHERE ';
     private static final String LIKE_CONDITION = ' LIKE ';
@@ -25,6 +25,7 @@ public with sharing class ListViewController {
             return executeQuery(query);
         }
 
+        System.debug('QUERY RETURNED__ ' + getQueryWithWhereCondition(query, searchFieldApiName, searchRequest));
         return executeQuery(getQueryWithWhereCondition(query, searchFieldApiName, searchRequest));
     }
 
@@ -65,12 +66,12 @@ public with sharing class ListViewController {
     }
 
     private static String getQueryWithWhereCondition(String query, String fieldApiName, String fieldValue) {
-        if (query.containsIgnoreCase(WHERE_CONDITION)) return changeWhereConditionQuery(query, fieldApiName, fieldValue);
+        if (query.containsIgnoreCase(WHERE_CONDITION)) return updateWhereConditionQuery(query, fieldApiName, fieldValue);
 
         return insertWhereConditionQuery(query, fieldApiName, fieldValue);
     }
 
-    public static String changeWhereConditionQuery(String query, String fieldApiName, String fieldValue) {
+    public static String updateWhereConditionQuery(String query, String fieldApiName, String fieldValue) {
         if (String.isBlank(query) || String.isBlank(fieldApiName) || String.isBlank(fieldValue)) return query;
 
         String changes = WHERE_CONDITION
@@ -82,16 +83,18 @@ public with sharing class ListViewController {
         return query.replaceAll('(?i)' + WHERE_CONDITION, changes); // ignore case
     }
 
-
     public static String insertWhereConditionQuery(String query, String fieldApiName, String fieldValue) {
         if (String.isBlank(query) || String.isBlank(fieldApiName) || String.isBlank(fieldValue)) return query;
+
+        String searchPattern = 'FROM \\w+ ?';
+        if (query.containsIgnoreCase('USING SCOPE ')) searchPattern = 'USING SCOPE \\w+ ?';
 
         String changes = WHERE_CONDITION
                 + fieldApiName
                 + LIKE_CONDITION
-                + '\'%' + String.escapeSingleQuotes(fieldValue) + '%\'';
+                + '\'%' + String.escapeSingleQuotes(fieldValue) + '%\' ';
 
-        List<String> regexMatches = regexPatternMatch('FROM \\w+ ?', query);
+        List<String> regexMatches = regexPatternMatch(searchPattern, query);
         if (regexMatches.isEmpty()) return query;
 
         return query.replaceAll(regexMatches[0], regexMatches[0] + changes);

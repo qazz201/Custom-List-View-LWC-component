@@ -1,0 +1,19 @@
+<!--
+ - Created by vladyslavkravcuk on 19.12.2021.
+ -->
+
+<apex:page id="PublicPageListView">
+   <apex:includeLightning />
+    <div  id="compContainer" />
+    <script>
+        $Lightning.use("c:customListViewApp", function() {
+            $Lightning.createComponent("c:lisViewExample",
+                {PassesValueFromVF:""},
+                "compContainer",
+                function(cmp) {
+                    console.log("c:VFPageApp loaded successfully in VF page");
+                }
+            );
+        });
+    </script>
+</apex:page>
