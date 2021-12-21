@@ -32,6 +32,7 @@ export default class ListView extends LightningElement {
 
     @api setSelectedListView(listView) {
         this.showSpinner = true;
+       // this.listViewRecords = [];
         this.selectedListView = listView;
         this.selectedListViewId = this.selectedListView?.Id;
     }

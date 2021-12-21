@@ -9,14 +9,16 @@ const EVENT_SELECT_VALUE = 'selectvalue';
 export default class ListViewSlider extends LightningElement {
 
     selected = {}; // currently selected option
-    optionNameByValue = {}; // new Map() is not working? ({'String'=>{Object}})
-    customSelect; // DOM select element
+    optionNameByValue = {}; // {'String'=>{Object}} TODO: change to Map
     lastOptionIndex; // Number: the index of the last option in select
     eventDebounce;
     datasets = {
         SELECT_NEXT,
         SELECT_PREVIOUS,
     };
+
+    // DOM elements
+    customSelect; // DOM select element
 
     renderedCallback() {
         this.customSelect = this.template.querySelector('.custom-select');
@@ -28,7 +30,7 @@ export default class ListViewSlider extends LightningElement {
     /********* API ****************************************************************************************************/
 
     @api set options(values) {
-        // check if value is an array
+        // check if the value is an array
         if (Array.isArray(values)) {
             const entries = values.map(option => [option.DeveloperName, option]);
             this.optionNameByValue = Object.fromEntries(entries);
@@ -36,7 +38,7 @@ export default class ListViewSlider extends LightningElement {
     };
 
     @api set selectedOption(option) {
-        // check if value is an Object
+        // check if the value is an Object
         if (typeof option === 'object' && !Array.isArray(option) && option !== null) {
             this.selected = option;
             this.setDefaultSelectedValue(option);
@@ -55,7 +57,7 @@ export default class ListViewSlider extends LightningElement {
 
     setDefaultSelectedValue(selectedOption = {}) {
         if (!this.customSelect) return;
-        this.customSelect.value = selectedOption.DeveloperName;
+        this.customSelect.value = selectedOption?.DeveloperName;
     }
 
     handleChangeSelection(event) {
@@ -81,7 +83,6 @@ export default class ListViewSlider extends LightningElement {
 
     getSelectedFromOptionsByName(optionName = '') {
         if (!this.optionNameByValue.hasOwnProperty(optionName)) return;
-
         return this.optionNameByValue[optionName];
     }
 

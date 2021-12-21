@@ -1,7 +1,11 @@
 import {LightningElement, wire, api} from 'lwc';
 import getListViewsBySobjectType from '@salesforce/apex/ListViewController.getListViewsBySobjectType';
 
-const CSS_LIST_VIEW_HIDDEN = 'list-view-container__hidden';
+const MAIN_CONTAINER = 'main-container';
+const LIST_VIEW_CONTAINER = 'list-view-container';
+const LIST_VIEW_CONTAINER_HIDDEN = 'list-view-container__hidden';
+const LIST_VIEW_SEARCH_INPUT = 'listView-search-input';
+
 const EVENT_MOUSELEAVE = 'mouseleave';
 
 export default class ListViewComponent extends LightningElement {
@@ -13,8 +17,12 @@ export default class ListViewComponent extends LightningElement {
     searchQuery = '';
     listViewParams = [];
     wiredSObjectType = ''; // to delay @wire service
-    searchDelay = 250; //ms
-    searchDebounce;
+    cssClass = {
+        MAIN_CONTAINER,
+        LIST_VIEW_CONTAINER_HIDDEN,
+        LIST_VIEW_CONTAINER,
+        LIST_VIEW_SEARCH_INPUT,
+    };
 
     // DOM
     domMainContainer;
@@ -27,9 +35,9 @@ export default class ListViewComponent extends LightningElement {
 
     renderedCallback() {
         this.domListView = this.template.querySelector('c-list-view');
-        this.domMainContainer = this.template.querySelector('.main-container');
-        this.domListViewContainer = this.template.querySelector('.list-view-container');
-        this.domSearchInput = this.template.querySelector('.listView-search-input');
+        this.domMainContainer = this.template.querySelector(`.${this.cssClass.MAIN_CONTAINER}`);
+        this.domListViewContainer = this.template.querySelector(`.${this.cssClass.LIST_VIEW_CONTAINER}`);
+        this.domSearchInput = this.template.querySelector(`.${this.cssClass.LIST_VIEW_SEARCH_INPUT}`);
 
         this.addEventMouseLeaveOnElement(this.domMainContainer, this.handleMouseLeaveMainContainer);
     }
@@ -48,10 +56,11 @@ export default class ListViewComponent extends LightningElement {
     }
 
     handleSearch(event) {
-        clearTimeout(this.searchDebounce);
-        const searchQuery = event.currentTarget.value;
+        this.searchQuery = event.currentTarget.value;
+    }
 
-        this.searchDebounce = setTimeout(() => this.searchQuery = searchQuery, this.searchDelay);
+    get initialListViewCssClass() {
+        return `${this.cssClass.LIST_VIEW_CONTAINER} ${this.cssClass.LIST_VIEW_CONTAINER_HIDDEN}`;
     }
 
     /********* List View Visibility Handlers **************************************************************************/
@@ -74,11 +83,11 @@ export default class ListViewComponent extends LightningElement {
         if (!this.domListViewContainer) return;
 
         if (showListView) {
-            this.domListViewContainer.classList.remove(CSS_LIST_VIEW_HIDDEN);
+            this.domListViewContainer.classList.remove(this.cssClass.LIST_VIEW_CONTAINER_HIDDEN);
             return;
         }
 
-        this.domListViewContainer.classList.add(CSS_LIST_VIEW_HIDDEN);
+        this.domListViewContainer.classList.add(this.cssClass.LIST_VIEW_CONTAINER_HIDDEN);
     }
 
     handleMouseLeaveMainContainer = () => {

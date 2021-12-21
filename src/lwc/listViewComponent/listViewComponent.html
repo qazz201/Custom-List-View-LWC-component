@@ -1,22 +1,22 @@
 <!-- List View Component -->
 <template>
-    <div class="main-container"
+    <div class={cssClass.MAIN_CONTAINER}
          onmousemove={handleMouseMoveMainContainer}>
         <div class="slds-card slds-has-bottom-magnet">
             <div class="slds-p-around_xx-small">
-                <lightning-input class="listView-search-input"
+                <lightning-input class={cssClass.LIST_VIEW_SEARCH_INPUT}
                                  type="search"
                                  autocomplete="off"
                                  name="enter-search"
                                  label="Search in List View"
                                  value={searchQuery}
                                  onfocus={handleInputFocus}
-                                 onchange= {handleSearch}
+                                 onchange={handleSearch}
                 ></lightning-input>
             </div>
         </div>
 
-        <div class="list-view-container list-view-container__hidden">
+        <div class={initialListViewCssClass}>
             <div class="slds-card slds-has-top-magnet">
                 <div class="slds-p-around_none">
                     <c-list-view list-view-params={listViewParams}
