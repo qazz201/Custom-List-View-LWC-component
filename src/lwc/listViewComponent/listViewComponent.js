@@ -56,7 +56,7 @@ export default class ListViewComponent extends LightningElement {
     }
 
     handleSearch(event) {
-        this.searchQuery = event.currentTarget.value;
+        this.searchQuery = event.currentTarget.value.trim();
     }
 
     get initialListViewCssClass() {
