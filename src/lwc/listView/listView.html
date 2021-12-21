@@ -6,7 +6,7 @@
 <template>
     <div>
         <!-- Header ----------------------------------------------------------------------------------------------->
-        <div class="slds-p-around_x-small">
+        <div class="list-view-slider-container slds-p-around_x-small">
             <c-list-view-slider options={listViewParams}
                                 selected-option={selectedListView}
                                 onselectvalue={handleListViewChange}>
@@ -19,7 +19,11 @@
                 <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
             </template>
 
-            <template if:false={isListViewRecordsExist}>No records Found</template>
+            <template if:false={isListViewRecordsExist}>
+                <span class="list-view-no-records-msg slds-m-top_xx-small">
+                    No records Found
+                </span>
+            </template>
 
             <template if:true={isListViewRecordsExist}>
                 <div class="list-view-container__results">
