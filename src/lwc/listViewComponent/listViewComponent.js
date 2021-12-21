@@ -7,28 +7,39 @@ const EVENT_MOUSELEAVE = 'mouseleave';
 export default class ListViewComponent extends LightningElement {
     @api sObjectType = '';
     @api searchFieldApiName = '';
+    @api selectedListViewIndex = 0;
     @api columns = [];
 
     searchQuery = '';
     listViewParams = [];
+    wiredSObjectType = ''; // to delay @wire service
 
     // DOM
     domMainContainer;
+    domListView;
+    domListViewContainer;
+    domSearchInput;
 
     // DOM triggers
     isEventMouseLeaveAdded = false;
 
     renderedCallback() {
+        this.domListView = this.template.querySelector('c-list-view');
         this.domMainContainer = this.template.querySelector('.main-container');
+        this.domListViewContainer = this.template.querySelector('.list-view-container');
+        this.domSearchInput = this.template.querySelector('.listView-search-input');
+
         this.addEventMouseLeaveOnElement(this.domMainContainer, this.handleMouseLeaveMainContainer);
     }
 
-    @wire(getListViewsBySobjectType, {sObjectType: '$sObjectType'})
+    @wire(getListViewsBySobjectType, {sObjectType: '$wiredSObjectType'})
     loadListViewParams({error, data}) {
         if (data) {
             this.listViewParams = data;
+            this.setSelectedListView();
             console.log(data)
         }
+
         if (error) {
             console.error(error);
         }
@@ -44,41 +55,40 @@ export default class ListViewComponent extends LightningElement {
     /********* List View Visibility Handlers **************************************************************************/
 
     handleInputFocus() {
-        const listView = this.template.querySelector('c-list-view');
-        if (!listView) return;
-
+        this.wiredSObjectType = this.sObjectType; // run @wire service
+        this.setSelectedListView();
         this.handleListViewVisibility(true);
+    }
 
-        if (!listView.selectedListViewId) {
-            listView.setSelectedListView(this.listViewParams[0]);
+    setSelectedListView() {
+        if (!this.domListView) return;
+
+        if (!this.domListView.selectedListViewId) {
+            this.domListView.setSelectedListView(this.listViewParams[this.selectedListViewIndex]);
         }
+    }
+
+    handleListViewVisibility(showListView = false) {
+        if (!this.domListViewContainer) return;
+
+        if (showListView) {
+            this.domListViewContainer.classList.remove(CSS_LIST_VIEW_HIDDEN);
+            return;
+        }
+
+        this.domListViewContainer.classList.add(CSS_LIST_VIEW_HIDDEN);
     }
 
     handleMouseLeaveMainContainer = () => {
         this.searchQuery = '';
         this.handleListViewVisibility(false);
 
-        const searchInput = this.template.querySelector('.listView-search-input');
-        if (!searchInput) return;
-        searchInput.blur();
-    }
-
-    handleListViewVisibility(showListView = false) {
-        const listViewContainer = this.template.querySelector('.list-view-container');
-
-        if (!listViewContainer) return;
-
-        if (showListView) {
-            listViewContainer.classList.remove(CSS_LIST_VIEW_HIDDEN);
-            return;
-        }
-
-        listViewContainer.classList.add(CSS_LIST_VIEW_HIDDEN);
+        if (!this.domSearchInput) return;
+        this.domSearchInput.blur();
     }
 
     handleMouseMoveMainContainer() {
         if (this.isEventMouseLeaveAdded) return;
-
         this.addEventMouseLeaveOnElement(this.domMainContainer, this.handleMouseLeaveMainContainer);
     }
 

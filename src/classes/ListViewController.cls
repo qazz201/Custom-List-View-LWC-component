@@ -1,5 +1,5 @@
 
-public class ListViewController {
+public without sharing class ListViewController {
     private static final String REQUEST_URL = URL.getSalesforceBaseUrl().toExternalForm() + '/services/data/v53.0/sobjects/{0}/listviews/{1}/describe'; // {0} sObject type; {1} view list id
     private static final String WHERE_CONDITION = ' WHERE ';
     private static final String LIKE_CONDITION = ' LIKE ';
@@ -28,16 +28,6 @@ public class ListViewController {
 
         return executeQuery(getQueryWithWhereCondition(query, searchFieldApiName, searchRequest));
     }
-
-//    @AuraEnabled
-//    public static List<SObject> loadMoreListViewRecords(String sObjectType, String listViewId, Integer limitRecords, Integer offsetRecords) {
-//        if (limitRecords == null) limitRecords = 10;
-//
-//        String query = getListViewRecordsQuery(sObjectType, listViewId);
-//        if (query == null) return null;
-//
-//        return null;
-//    }
 
     /********** Utility ***********************************************************************************************/
 

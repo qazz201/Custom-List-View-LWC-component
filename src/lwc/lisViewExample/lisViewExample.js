@@ -5,14 +5,25 @@
 import {LightningElement} from 'lwc';
 
 export default class LisViewExample extends LightningElement {
-    searchFieldApiName = 'Name';
-    sObjectType = 'Contact';
-    columns = [
+    searchFieldApiNameExOne = 'Name';
+    sObjectTypeExOne = 'Contact';
+    columnsExOne = [
         {label: 'Name', fieldName: 'Name', hideDefaultActions: true},
         {label: 'Email', fieldName: 'Email', hideDefaultActions: true}
     ];
 
+    searchFieldApiNameExTwo = 'Name';
+    sObjectTypeExTwo = 'Account';
+    columnsExTwo = [
+        {label: 'Name', fieldName: 'Name', hideDefaultActions: true},
+        {label: 'Phone', fieldName: 'Phone', hideDefaultActions: true}
+    ];
+
     changeObjectType(event) {
         this.sObjectType = event.target.value;
+    }
+
+    get selectedListViewIndex(){
+        return 1;
     }
 }
