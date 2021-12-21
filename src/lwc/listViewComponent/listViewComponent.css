@@ -1,4 +1,14 @@
 
+.main-container {
+    position: relative;
+}
+
+.list-view-container {
+    position: absolute;
+    z-index: 3;
+    width: 100%;
+}
+
 .list-view-container__hidden {
     display: none;
 }

@@ -19,10 +19,6 @@ export default class LisViewExample extends LightningElement {
         {label: 'Phone', fieldName: 'Phone', hideDefaultActions: true}
     ];
 
-    changeObjectType(event) {
-        this.sObjectType = event.target.value;
-    }
-
     get selectedListViewIndex(){
         return 1;
     }

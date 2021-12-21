@@ -1,18 +1,6 @@
 <!-- Lis View Example -->
 <template>
-    <h2 class="slds-text-color_error">{sObjectType}</h2>
-    <lightning-input
-            name="enter-search"
-            label="sObject type"
-            type="search"
-            onchange={changeObjectType}>
-    </lightning-input>
-
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-
+    <h2 class="slds-text-color_error">{sObjectTypeExOne}</h2>
     <c-list-view-component search-field-api-name={searchFieldApiNameExOne}
                            columns={columnsExOne}
                            s-object-type={sObjectTypeExOne}>
@@ -23,10 +11,15 @@
     <br/>
     <br/>
 
-    <c-list-view-component search-field-api-name={searchFieldApiNameExTwo}
-                           columns={columnsExTwo}
-                           selected-list-view-index={selectedListViewIndex}
-                           s-object-type={sObjectTypeExTwo}>
-    </c-list-view-component>
+    <h2 class="slds-text-color_error">{sObjectTypeExTwo}</h2>
+    <div class="slds-grid slds-wrap">
+        <div class="slds-size_1-of-2">
+            <c-list-view-component search-field-api-name={searchFieldApiNameExTwo}
+                                   columns={columnsExTwo}
+                                   selected-list-view-index={selectedListViewIndex}
+                                   s-object-type={sObjectTypeExTwo}>
+            </c-list-view-component>
+        </div>
+    </div>
 
 </template>
