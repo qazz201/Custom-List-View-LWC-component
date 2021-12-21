@@ -13,6 +13,8 @@ export default class ListViewComponent extends LightningElement {
     searchQuery = '';
     listViewParams = [];
     wiredSObjectType = ''; // to delay @wire service
+    searchDelay = 250; //ms
+    searchDebounce;
 
     // DOM
     domMainContainer;
@@ -46,10 +48,10 @@ export default class ListViewComponent extends LightningElement {
     }
 
     handleSearch(event) {
-        const isEnterKey = event.keyCode === 13;
-        if (isEnterKey) {
-            this.searchQuery = event.target.value;
-        }
+        clearTimeout(this.searchDebounce);
+        const searchQuery = event.currentTarget.value;
+
+        this.searchDebounce = setTimeout(() => this.searchQuery = searchQuery, this.searchDelay);
     }
 
     /********* List View Visibility Handlers **************************************************************************/

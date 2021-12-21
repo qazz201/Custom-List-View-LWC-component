@@ -1,9 +1,7 @@
 <!-- List View Component -->
 <template>
     <div class="main-container"
-         onkeyup={handleSearch}
-         onmousemove={handleMouseMoveMainContainer}
-         tabindex="-1">
+         onmousemove={handleMouseMoveMainContainer}>
         <div class="slds-card slds-has-bottom-magnet">
             <div class="slds-p-around_xx-small">
                 <lightning-input class="listView-search-input"
@@ -13,6 +11,7 @@
                                  label="Search in List View"
                                  value={searchQuery}
                                  onfocus={handleInputFocus}
+                                 onchange= {handleSearch}
                 ></lightning-input>
             </div>
         </div>
