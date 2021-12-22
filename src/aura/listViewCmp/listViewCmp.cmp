@@ -1,3 +1,0 @@
-<aura:component description="listViewContainer" implements="flexipage:availableForAllPageTypes">
-    <c:lisViewExample></c:lisViewExample>
-</aura:component>
