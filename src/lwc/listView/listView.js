@@ -60,7 +60,7 @@ export default class ListView extends LightningElement {
     }
 
     get isListViewRecordsExist() {
-        return !!this.listViewRecords.length;
+        return Boolean(this.listViewRecords.length);
     }
 
     handleListViewChange(event) {
